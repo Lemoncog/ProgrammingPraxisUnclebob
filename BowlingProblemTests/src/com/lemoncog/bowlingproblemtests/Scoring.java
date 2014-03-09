@@ -13,8 +13,10 @@ public class Scoring {
 	@Test
 	public void checkIsStrikeFirstRound() {
 		FrameTracker frame = new BowlingFrameTracker();
+		BowlResultHistory history = new BowlResultHistory();
+		history.start();
 		
-		BowlResult result = frame.bowlResult(10);
+		BowlResult result = frame.bowlResult(history, 10);
 		Assert.assertTrue(result.isStrike());
 		Assert.assertFalse(result.isSpare());
 	}
@@ -22,8 +24,10 @@ public class Scoring {
 	@Test
 	public void checkIsNotStrikeFirstRound(){
 		FrameTracker frame = new BowlingFrameTracker();
+		BowlResultHistory history = new BowlResultHistory();
+		history.start();
 		
-		BowlResult result = frame.bowlResult(5);
+		BowlResult result = frame.bowlResult(history, 5);
 		Assert.assertFalse(result.isStrike());
 		Assert.assertFalse(result.isSpare());
 	}
@@ -32,8 +36,10 @@ public class Scoring {
 	public void checkIsStrikeSecondRound()
 	{
 		FrameTracker frame = createFrameTracker(0,1);
+		BowlResultHistory history = new BowlResultHistory();
+		history.start();
 		
-		BowlResult result = frame.bowlResult(10);
+		BowlResult result = frame.bowlResult(history, 10);
 		Assert.assertFalse(result.isStrike());
 		Assert.assertTrue(result.isSpare());
 	}
@@ -42,8 +48,10 @@ public class Scoring {
 	public void checkIsOpenFrameSecondRound()
 	{
 		FrameTracker frame = createFrameTracker(0,1);
+		BowlResultHistory history = new BowlResultHistory();
+		history.start();
 		
-		BowlResult result = frame.bowlResult(9);
+		BowlResult result = frame.bowlResult(history, 9);
 		
 		Assert.assertFalse(result.isStrike());
 		Assert.assertFalse(result.isSpare());
@@ -54,8 +62,10 @@ public class Scoring {
 	public void checkIsSpareFirstRound()
 	{
 		FrameTracker frame = createFrameTracker(0,0);
+		BowlResultHistory history = new BowlResultHistory();
+		history.start();
 		
-		BowlResult result = frame.bowlResult(10);
+		BowlResult result = frame.bowlResult(history, 10);
 		
 		Assert.assertFalse(result.isSpare());
 	}
@@ -63,6 +73,31 @@ public class Scoring {
 	@Test
 	public void checkIsSpareSecondRound()
 	{
+		FrameTracker frame = createFrameTracker(0, 1);
+		BowlResultHistory history = new BowlResultHistory();
+		history.start();
+		
+		BowlResult fakeLastRound = new BowlResult();
+		fakeLastRound.setScore(5);
+		history.addHistory(fakeLastRound);
+		
+		BowlResult result = frame.bowlResult(history, 5);
+		
+		Assert.assertTrue(result.isSpare());
+	}
+	
+	@Test
+	public void checkScoreAfterTwoOpenFrames()
+	{
+		FrameTracker frame = createFrameTracker(0, 0);
+		BowlResultHistory history = new BowlResultHistory();
+		history.start();
+		
+		
+		history.addHistory(frame.bowlResult(history, 4));
+		history.addHistory(frame.bowlResult(history, 4));
+		
+		Assert.assertEquals(8, history.getFrameScore());
 	}
 	
 	@Test

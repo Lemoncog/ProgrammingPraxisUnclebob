@@ -3,38 +3,35 @@ package com.lemoncog.bowlProblem;
 public class BowlingFrameTracker implements FrameTracker {
 
 	private FrameProgress mProgress;
-	private BowlResultHistory mBowlResultHistory;
 	
 	public BowlingFrameTracker() {
 		mProgress = new FrameProgress();
-		mBowlResultHistory = new BowlResultHistory();
-		mBowlResultHistory.start();
 	}
 	
 	@Override
-	public BowlResult bowlResult(int pinsHit) {
+	public BowlResult bowlResult(BowlResultHistory history, int pinsHit) {
 
 		BowlResult bowlResult = new BowlResult();
-		bowlResult.setStrike(isStrike(pinsHit));
-		bowlResult.setIsSpare(isSpare(pinsHit));
-		bowlResult.setIsOpenFrame(isOpenFrame(pinsHit));
+		bowlResult.setStrike(isStrike(history, pinsHit));
+		bowlResult.setIsSpare(isSpare(history, pinsHit));
+		bowlResult.setIsOpenFrame(isOpenFrame(history, pinsHit));
 		bowlResult.setScore(pinsHit);
 
 		return bowlResult;
 	}
 	
-	private boolean isOpenFrame(int pinsHit)
+	private boolean isOpenFrame(BowlResultHistory history, int pinsHit)
 	{
-		return getProgress().isRound(1) && (getBowlResultHistory().getRoundCount() + pinsHit) < 10;
+		return getProgress().isRound(1) && (history.getRoundCount() + pinsHit) < 10;
 	}
 
-	private boolean isStrike(int pinsHit) {
-		return getProgress().isRound(0) && (getBowlResultHistory().getRoundScore() + pinsHit) == 10;
+	private boolean isStrike(BowlResultHistory history, int pinsHit) {
+		return getProgress().isRound(0) && (history.getFrameScore() + pinsHit) == 10;
 	}
 	
-	private boolean isSpare(int pinsHit)
+	private boolean isSpare(BowlResultHistory history, int pinsHit)
 	{
-		return getProgress().isRound(1) && (getBowlResultHistory().getRoundScore() + pinsHit) == 10;
+		return getProgress().isRound(1) && (history.getFrameScore() + pinsHit) == 10;
 	}
 
 	@Override
@@ -46,10 +43,6 @@ public class BowlingFrameTracker implements FrameTracker {
 		return mProgress;
 	}
 	
-	public BowlResultHistory getBowlResultHistory() {
-		return mBowlResultHistory;
-	}
-
 	@Override
 	public void newFrame() {
 		getProgress().setFrame(getProgress().getFrame()+1);

@@ -2,7 +2,7 @@ package com.lemoncog.bowlProblem;
 
 public interface FrameTracker {
 
-	BowlResult bowlResult(int pinsHit);
+	BowlResult bowlResult(BowlResultHistory history, int pinsHit);
 	void setProgress(FrameProgress progress);
 	FrameProgress getProgress();
 	void newFrame();

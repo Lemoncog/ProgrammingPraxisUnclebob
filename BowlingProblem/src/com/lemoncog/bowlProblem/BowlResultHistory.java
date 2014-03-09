@@ -20,7 +20,7 @@ public class BowlResultHistory {
 			
 			for(int i = 0; i < mRoundResults.size(); i++)
 			{
-				score = mRoundResults.get(i).getScore();
+				score += mRoundResults.get(i).getScore();
 			}
 			
 			return score;
@@ -48,7 +48,7 @@ public class BowlResultHistory {
 		return mFrameHistory.get(mFrameHistory.size()-1);
 	}
 
-	public int getRoundScore() {
+	public int getFrameScore() {
 		return getActiveFrame().getTotalScore();
 	}
 
